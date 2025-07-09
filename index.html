@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ketan Mhaske - Software Developer</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -17,37 +16,45 @@
             line-height: 1.6;
             color: #333;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        header {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+        /* Navigation */
+        nav {
             position: fixed;
             top: 0;
             width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             z-index: 1000;
+            padding: 1rem 0;
             transition: all 0.3s ease;
         }
 
-        nav {
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 0;
+            padding: 0 2rem;
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
-            color: white;
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        nav.scrolled .logo {
+            color: #333;
         }
 
         .nav-links {
@@ -57,13 +64,34 @@
         }
 
         .nav-links a {
-            color: white;
+            color: #fff;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+        }
+
+        nav.scrolled .nav-links a {
+            color: #333;
         }
 
         .nav-links a:hover {
-            color: #ffd700;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            margin: 3px 0;
+            transition: 0.3s;
         }
 
         /* Hero Section */
@@ -74,46 +102,115 @@
             justify-content: center;
             text-align: center;
             color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
         }
 
-        .hero-content h1 {
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.1)"/><stop offset="100%" style="stop-color:rgba(255,255,255,0)"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"/><circle cx="800" cy="300" r="150" fill="url(%23a)"/><circle cx="400" cy="700" r="120" fill="url(%23a)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .hero h1 {
             font-size: 3.5rem;
             margin-bottom: 1rem;
-            animation: fadeInUp 1s ease;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
         }
 
-        .hero-content p {
+        .hero .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.3s forwards;
+        }
+
+        .hero .description {
             font-size: 1.2rem;
             margin-bottom: 2rem;
-            animation: fadeInUp 1s ease 0.2s both;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.6s forwards;
         }
 
-        .cta-button {
-            display: inline-block;
-            background: #ffd700;
-            color: #333;
-            padding: 12px 30px;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.9s forwards;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
             border-radius: 50px;
             text-decoration: none;
             font-weight: bold;
-            transition: transform 0.3s ease;
-            animation: fadeInUp 1s ease 0.4s both;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         /* Sections */
         .section {
-            padding: 80px 0;
+            padding: 5rem 0;
             background: white;
         }
 
         .section:nth-child(even) {
             background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
         .section-title {
@@ -130,9 +227,9 @@
             bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
+            width: 60px;
             height: 4px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
             border-radius: 2px;
         }
 
@@ -144,39 +241,101 @@
             align-items: center;
         }
 
+        .about-image {
+            text-align: center;
+        }
+
+        .profile-pic {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            margin: 0 auto;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         .about-text {
             font-size: 1.1rem;
             line-height: 1.8;
         }
 
         .contact-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .contact-info h3 {
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            margin-bottom: 1rem;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border-radius: 25px;
+            transition: all 0.3s ease;
         }
 
-        .contact-item i {
-            margin-right: 1rem;
-            font-size: 1.2rem;
-            color: #ffd700;
-        }
-
-        .contact-item a {
+        .contact-item:hover {
+            background: #667eea;
             color: white;
-            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .skill-category h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            transform: scale(1.05);
         }
 
         /* Experience Section */
@@ -184,53 +343,60 @@
             background: white;
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
-            border-left: 5px solid #667eea;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
         }
 
-        .experience-header {
+        .experience-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .exp-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 1rem;
         }
 
-        .job-title {
+        .exp-title {
             font-size: 1.3rem;
             font-weight: bold;
             color: #333;
         }
 
-        .job-period {
-            background: #667eea;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+        .exp-company {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .exp-date {
+            background: #f8f9fa;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
             font-size: 0.9rem;
-        }
-
-        .company-name {
-            font-size: 1.1rem;
             color: #666;
-            margin-bottom: 1rem;
         }
 
-        .experience-points {
-            list-style: none;
+        .exp-description {
+            margin-top: 1rem;
         }
 
-        .experience-points li {
-            position: relative;
-            padding-left: 1.5rem;
+        .exp-description ul {
+            margin-left: 1.5rem;
+        }
+
+        .exp-description li {
             margin-bottom: 0.5rem;
-            color: #555;
+            position: relative;
         }
 
-        .experience-points li::before {
+        .exp-description li::before {
             content: '▶';
             position: absolute;
-            left: 0;
+            left: -1.5rem;
             color: #667eea;
         }
 
@@ -245,18 +411,20 @@
             background: white;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
         .project-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
         }
 
         .project-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
             padding: 1.5rem;
+            text-align: center;
         }
 
         .project-title {
@@ -270,64 +438,29 @@
             opacity: 0.9;
         }
 
-        .project-content {
+        .project-body {
             padding: 1.5rem;
         }
 
-        .project-points {
-            list-style: none;
+        .project-description {
+            margin-bottom: 1rem;
         }
 
-        .project-points li {
+        .project-features {
+            margin-left: 1.5rem;
+        }
+
+        .project-features li {
+            margin-bottom: 0.5rem;
             position: relative;
-            padding-left: 1.5rem;
-            margin-bottom: 0.8rem;
-            color: #555;
-            font-size: 0.95rem;
         }
 
-        .project-points li::before {
+        .project-features li::before {
             content: '✓';
             position: absolute;
-            left: 0;
-            color: #28a745;
+            left: -1.5rem;
+            color: #667eea;
             font-weight: bold;
-        }
-
-        /* Skills Section */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .skill-category {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .skill-category h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: #333;
-        }
-
-        .skill-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
-        }
-
-        .skill-tag {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
         }
 
         /* Education Section */
@@ -343,24 +476,31 @@
             top: 0;
             bottom: 0;
             width: 2px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(to bottom, #667eea, #764ba2);
         }
 
         .education-item {
             position: relative;
             background: white;
             padding: 1.5rem;
-            border-radius: 10px;
             margin-bottom: 2rem;
-            margin-left: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .education-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
 
         .education-item::before {
             content: '';
             position: absolute;
-            left: -2.5rem;
-            top: 1.5rem;
+            left: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
             width: 12px;
             height: 12px;
             background: #667eea;
@@ -369,14 +509,14 @@
         }
 
         .education-degree {
-            font-size: 1.2rem;
             font-weight: bold;
             color: #333;
             margin-bottom: 0.5rem;
         }
 
         .education-school {
-            color: #666;
+            color: #667eea;
+            font-weight: 600;
             margin-bottom: 0.5rem;
         }
 
@@ -384,19 +524,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .education-year {
-            background: #667eea;
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
+            color: #666;
             font-size: 0.9rem;
-        }
-
-        .education-grade {
-            font-weight: bold;
-            color: #28a745;
         }
 
         /* Footer */
@@ -405,6 +534,12 @@
             color: white;
             text-align: center;
             padding: 2rem 0;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
         .social-links {
@@ -416,24 +551,16 @@
 
         .social-links a {
             color: white;
-            font-size: 1.5rem;
-            transition: color 0.3s ease;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
 
         .social-links a:hover {
-            color: #ffd700;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            background: #667eea;
+            transform: translateY(-3px);
         }
 
         /* Responsive Design */
@@ -442,17 +569,25 @@
                 display: none;
             }
 
-            .hero-content h1 {
+            .mobile-menu {
+                display: flex;
+            }
+
+            .hero h1 {
                 font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
             }
 
             .about-content {
                 grid-template-columns: 1fr;
+                text-align: center;
             }
 
-            .experience-header {
+            .exp-header {
                 flex-direction: column;
-                align-items: flex-start;
                 gap: 1rem;
             }
 
@@ -463,184 +598,132 @@
             .skills-grid {
                 grid-template-columns: 1fr;
             }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-info {
+                justify-content: center;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Loading animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <nav class="container">
-            <div class="logo">Ketan Mhaske</div>
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">KM</a>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#projects">Projects</a></li>
-                <li><a href="#skills">Skills</a></li>
                 <li><a href="#education">Education</a></li>
-                <li><a href="#contact">Contact</a></li>
             </ul>
-        </nav>
-    </header>
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
-    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
             <h1>Ketan Mhaske</h1>
-            <p>Software Developer | C/C++ Expert | Linux Kernel Developer</p>
-            <a href="#contact" class="cta-button">Get In Touch</a>
+            <p class="subtitle">Software Developer</p>
+            <p class="description">Passionate about creating high-performance applications in C++ and Linux systems. Specializing in system-level programming, security solutions, and cross-platform development.</p>
+            <div class="cta-buttons">
+                <a href="#about" class="btn btn-primary">Learn More</a>
+                <a href="#projects" class="btn btn-secondary">View Projects</a>
+            </div>
         </div>
     </section>
 
-    <!-- About Section -->
     <section id="about" class="section">
         <div class="container">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-content">
-                <div class="contact-info">
-                    <h3>Contact Information</h3>
-                    <div class="contact-item">
-                        <i class="fas fa-phone"></i>
-                        <span>7887328671</span>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:ketanmhaske641@gmail.com">ketanmhaske641@gmail.com</a>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fab fa-linkedin"></i>
-                        <a href="#">LinkedIn Profile</a>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Mumbai, Maharashtra</span>
-                    </div>
+            <h2 class="section-title fade-in">About Me</h2>
+            <div class="about-content fade-in">
+                <div class="about-image">
+			<img class="profile-pic" src="./assets/images/ketan.jpg" alt="Ketan Mhaske">
                 </div>
                 <div class="about-text">
-                    <p>I am a passionate Software Developer with expertise in C/C++ and Linux kernel development. Currently working at MicroWorld Software Services, I specialize in developing performance-critical applications, cross-platform solutions, and system-level security tools.</p>
+                    <p>Hello! I'm Ketan Mhaske, a passionate Software Developer with expertise in C/C++ and Linux systems. I specialize in developing performance-critical applications, security solutions, and cross-platform tools.</p>
                     
-                    <p>My experience spans from developing Linux kernel modules for system monitoring to creating comprehensive security solutions including 2FA systems, device control daemons, and multi-cloud synchronization libraries. I have a strong background in systems programming, networking, and cybersecurity.</p>
+                    <p>Currently working at MicroWorld Software Services Ltd in Mumbai, I focus on creating efficient, scalable solutions that solve real-world problems. My experience includes Linux kernel development, system monitoring tools, and security applications.</p>
                     
-                    <p>I'm driven by the challenge of optimizing system performance and building robust, secure software solutions that make a real impact. My work involves everything from low-level kernel programming to user-friendly Qt interfaces.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Experience Section -->
-    <section id="experience" class="section">
-        <div class="container">
-            <h2 class="section-title">Professional Experience</h2>
-            <div class="experience-card">
-                <div class="experience-header">
-                    <div>
-                        <div class="job-title">Software Developer</div>
-                        <div class="company-name">MicroWorld Software Services Ltd Pvt, Andheri, Mumbai</div>
-                    </div>
-                    <div class="job-period">Nov 2023 – Present</div>
-                </div>
-                <ul class="experience-points">
-                    <li>Led the development of performance-critical software applications in C and C++, with a focus on algorithm optimization and system efficiency</li>
-                    <li>Designed and implemented cross-platform C++ solutions using the Qt framework, enhancing application usability on Linux and macOS</li>
-                    <li>Developed a Linux kernel module to intercept system calls, enabling custom monitoring and control of file operations based on ransomware file extensions</li>
-                    <li>Contributed to a vulnerability detection tool integrating C/C++, SQLite3, and Bash, improving security tracking and system resilience</li>
-                    <li>Improved system performance by optimizing low-level code and integrating efficient file handling routines in C++</li>
-                    <li>Gained exposure to Linux kernel development and basic security mechanisms through the creation of system monitoring tools</li>
-                    <li>Implemented systems for retrieving and deploying updated policy and virus definitions to client systems, improving security efficiency</li>
-                    <li>Applied fundamental knowledge of system-level performance optimization, basic networking, and security protocols</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="section">
-        <div class="container">
-            <h2 class="section-title">Featured Projects</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-title">Device Control Daemon for Linux</div>
-                        <div class="project-tech">C++, Linux Kernel, Udev, libudev, Qt</div>
-                    </div>
-                    <div class="project-content">
-                        <ul class="project-points">
-                            <li>Developed a device control daemon service in C++ for Linux, managing various device connections such as USB, CD-ROM, SD cards, Bluetooth, and Wi-Fi</li>
-                            <li>Enabled user-defined control over blocking or allowing specific devices through a user-friendly interface using Qt</li>
-                            <li>Utilized udev and libudev libraries alongside custom kernel modules to intercept and manage device connections</li>
-                            <li>Implemented robust security measures to protect the system from unauthorized device access</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-title">Two-Factor Authentication for Linux (2FA)</div>
-                        <div class="project-tech">C++, PAM, Google Authenticator, Qt</div>
-                    </div>
-                    <div class="project-content">
-                        <ul class="project-points">
-                            <li>Developed a 2FA system in C++ for Linux user login (GDM), SSH, and other authentication mechanisms</li>
-                            <li>Implemented flexibility for applying 2FA to specific users or all users, with OTP generated every 30 seconds</li>
-                            <li>Integrated Google Authenticator library and PAM modules for secure, customizable authentication</li>
-                            <li>Created an intuitive UI using Qt for easy configuration and management of 2FA settings</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-title">libsync – Multi-Cloud Directory Sync Library</div>
-                        <div class="project-tech">C/C++, Linux, Threads, libcurl, jsoncpp</div>
-                    </div>
-                    <div class="project-content">
-                        <ul class="project-points">
-                            <li>Designed and implemented a modular C/C++ dynamic library for syncing directories with OneDrive, Google Drive, and Dropbox</li>
-                            <li>Launched separate threads for each provider to enable parallel and policy-driven syncing every 10 minutes</li>
-                            <li>Utilized access and refresh tokens with REST APIs for secure cloud interactions</li>
-                            <li>Implements bi-directional sync logic with automatic conflict resolution and duplicate prevention</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-title">Website Blocking Daemon Service</div>
-                        <div class="project-tech">C++, Linux Kernel, netqueue, Packet Capture</div>
-                    </div>
-                    <div class="project-content">
-                        <ul class="project-points">
-                            <li>Contributed to a website blocking daemon service using C++ and the netqueue library</li>
-                            <li>Developed a kernel module for capturing and extracting packet data</li>
-                            <li>Implemented efficient packet inspection and filtering mechanisms to block unwanted websites</li>
-                            <li>Enhanced user browsing security through user-defined blocking criteria</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-title">Attachment Control System for Linux</div>
-                        <div class="project-tech">C/C++, inotify, fanotify, libpcap, TLS, SNI</div>
-                    </div>
-                    <div class="project-content">
-                        <ul class="project-points">
-                            <li>Built a file access control system using inotify and fanotify for real-time file monitoring</li>
-                            <li>Captured process information for actions by browsers and tools like Firefox, Chrome, curl</li>
-                            <li>Implemented policy-based logic to allow or deny file attachments based on process behavior</li>
-                            <li>Extended functionality to inspect TLS handshakes and retrieve SNI and IP details</li>
-                        </ul>
+                    <p>I'm passionate about low-level programming, system optimization, and building robust software architectures. I enjoy tackling complex technical challenges and continuously learning new technologies.</p>
+                    
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <span>📧</span>
+                            <span>ketanmhaske641@gmail.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <span>📱</span>
+                            <span>7887328671</span>
+                        </div>
+                        <div class="contact-item">
+                            <span>📍</span>
+                            <span>Mumbai, India</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Skills Section -->
     <section id="skills" class="section">
         <div class="container">
-            <h2 class="section-title">Technical Skills</h2>
-            <div class="skills-grid">
+            <h2 class="section-title fade-in">Technical Skills</h2>
+            <div class="skills-grid fade-in">
                 <div class="skill-category">
                     <h3>Programming Languages</h3>
                     <div class="skill-tags">
@@ -652,6 +735,7 @@
                         <span class="skill-tag">JavaScript</span>
                     </div>
                 </div>
+                
                 <div class="skill-category">
                     <h3>Frameworks & APIs</h3>
                     <div class="skill-tags">
@@ -662,13 +746,18 @@
                         <span class="skill-tag">OAuth 2.0</span>
                     </div>
                 </div>
+                
                 <div class="skill-category">
-                    <h3>Operating Systems</h3>
+                    <h3>Systems Programming</h3>
                     <div class="skill-tags">
-                        <span class="skill-tag">Linux</span>
-                        <span class="skill-tag">macOS</span>
+                        <span class="skill-tag">Linux Kernel</span>
+                        <span class="skill-tag">Multithreading</span>
+                        <span class="skill-tag">Socket Programming</span>
+                        <span class="skill-tag">Netfilter</span>
+                        <span class="skill-tag">Device Management</span>
                     </div>
                 </div>
+                
                 <div class="skill-category">
                     <h3>Developer Tools</h3>
                     <div class="skill-tags">
@@ -680,131 +769,485 @@
                         <span class="skill-tag">CMake</span>
                     </div>
                 </div>
+                
                 <div class="skill-category">
                     <h3>Libraries</h3>
                     <div class="skill-tags">
                         <span class="skill-tag">boost</span>
-                        <span class="skill-tag">cjson</span>
                         <span class="skill-tag">curl</span>
-                        <span class="skill-tag">spdlog</span>
                         <span class="skill-tag">jsoncpp</span>
+                        <span class="skill-tag">spdlog</span>
+                        <span class="skill-tag">libpcap</span>
                     </div>
                 </div>
+                
                 <div class="skill-category">
-                    <h3>Systems Programming</h3>
+                    <h3>Networking/Security</h3>
                     <div class="skill-tags">
-                        <span class="skill-tag">Multithreading</span>
-                        <span class="skill-tag">Socket Programming</span>
-                        <span class="skill-tag">Linux Kernel</span>
-                        <span class="skill-tag">Netfilter</span>
-                        <span class="skill-tag">Device Management</span>
+                        <span class="skill-tag">Packet Capture</span>
+                        <span class="skill-tag">2FA Integration</span>
+                        <span class="skill-tag">File Monitoring</span>
+                        <span class="skill-tag">TLS/SNI</span>
+                        <span class="skill-tag">Regex</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Education Section -->
+    <section id="experience" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Experience</h2>
+            <div class="fade-in">
+                <div class="experience-card">
+                    <div class="exp-header">
+                        <div>
+                            <div class="exp-title">Software Developer</div>
+                            <div class="exp-company">MicroWorld Software Services Ltd Pvt, Mumbai</div>
+                        </div>
+                        <div class="exp-date">Nov 2023 – Present</div>
+                    </div>
+                    <div class="exp-description">
+                        <ul>
+                            <li>Led the development of performance-critical software applications in C and C++, with a focus on algorithm optimization and system efficiency.</li>
+                            <li>Designed and implemented cross-platform C++ solutions using the Qt framework, enhancing application usability on Linux and macOS.</li>
+                            <li>Developed a Linux kernel module to intercept system calls, enabling custom monitoring and control of file operations based on ransomware file extensions.</li>
+                            <li>Contributed to a vulnerability detection tool integrating C/C++, SQLite3, and Bash, improving security tracking and system resilience.</li>
+                            <li>Improved system performance by optimizing low-level code and integrating efficient file handling routines in C++.</li>
+                            <li>Gained exposure to Linux kernel development and basic security mechanisms through the creation of system monitoring tools.</li>
+                            <li>Implemented systems for retrieving and deploying updated policy and virus definitions to client systems, improving security efficiency.</li>
+                            <li>Applied fundamental knowledge of system-level performance optimization, basic networking, and security protocols.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Projects</h2>
+            <div class="projects-grid fade-in">
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-title">Device Control Daemon for Linux</div>
+                        <div class="project-tech">C++, Linux Kernel, Udev, libudev, Qt</div>
+                    </div>
+                    <div class="project-body">
+                        <p class="project-description">A comprehensive device control daemon service for Linux systems.</p>
+                        <ul class="project-features">
+                            <li>Manages various device connections (USB, CD-ROM, SD cards, Bluetooth, Wi-Fi)</li>
+                            <li>User-friendly Qt interface for device control</li>
+                            <li>Custom kernel modules for device interception</li>
+                            <li>Robust security measures against unauthorized access</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-title">Two-Factor Authentication for Linux</div>
+                        <div class="project-tech">C++, PAM, Google Authenticator, Qt</div>
+                    </div>
+                    <div class="project-body">
+                        <p class="project-description">A secure 2FA system for Linux user authentication.</p>
+                        <ul class="project-features">
+                            <li>OTP-based security for GDM, SSH, and other mechanisms</li>
+                            <li>Flexible user configuration options</li>
+                            <li>30-second OTP generation on mobile devices</li>
+                            <li>Intuitive Qt-based admin interface</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-title">Website Blocking Daemon Service</div>
+                        <div class="project-tech">C++, Linux Kernel, nfeque, Packet Capture</div>
+                    </div>
+                    <div class="project-body">
+                        <p class="project-description">Advanced network packet inspection and website blocking system.</p>
+                        <ul class="project-features">
+                            <li>Real-time packet capture and inspection</li>
+                            <li>Custom kernel module for packet extraction</li>
+                            <li>User-defined blocking criteria</li>
+                            <li>Enhanced browsing security</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-title">libsync – Multi-Cloud Sync Library</div>
+                        <div class="project-tech">C/C++, Linux, Threads, libcurl, jsoncpp</div>
+                    </div>
+                    <div class="project-body">
+                        <p class="project-description">Cross-platform library for multi-cloud directory synchronization.</p>
+                        <ul class="project-features">
+                            <li>Syncs with OneDrive, Google Drive, and Dropbox</li>
+                            <li>Parallel processing with separate threads</li>
+                            <li>Secure token management via REST APIs</li>
+                            <li>Bi-directional sync with conflict resolution</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-title">Attachment Control System</div>
+                        <div class="project-tech">C/C++, inotify, fanotify, libpcap, TLS, SNI</div>
+                    </div>
+                    <div class="project-body">
+                        <p class="project-description">Comprehensive file access control and monitoring system.</p>
+                        <ul class="project-features">
+                            <li>Real-time file event monitoring</li>
+                            <li>Process information capture and analysis</li>
+                            <li>TLS handshake inspection with SNI extraction</li>
+                            <li>Policy-based file transfer control</li>
+                            <li>Socket inspection and correlation analysis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="education" class="section">
         <div class="container">
-            <h2 class="section-title">Education</h2>
-            <div class="education-timeline">
+            <h2 class="section-title fade-in">Education</h2>
+            <div class="education-timeline fade-in">
                 <div class="education-item">
-                    <div class="education-degree">Bachelor of Technology</div>
-                    <div class="education-school">Deogiri Institute of Engineering And Management Studies, chh. SambhajiNagar (Aurangabad)</div>
+                    <div class="education-degree">Bachelor of Technology (B.Tech)</div>
+                    <div class="education-school">Deogiri Institute of Engineering And Management Studies</div>
                     <div class="education-details">
-                        <div class="education-year">2019-2023</div>
-                        <div class="education-grade">CPI: 8.0</div>
+                        <span>Dbatu University,Loner Raigad</span>
+                        <span>2019-2023 | CPI: 8.0</span>
                     </div>
                 </div>
+                
                 <div class="education-item">
                     <div class="education-degree">Higher Secondary Certificate (HSC)</div>
-                    <div class="education-school">Samarth Junior College of Science, Arts & Commerce, chh.SambhajiNagar</div>
+                    <div class="education-school">Samarth Junior College of Science, Arts & Commerce</div>
                     <div class="education-details">
-                        <div class="education-year">2017-2019</div>
-                        <div class="education-grade">69.7%</div>
+                        <span>Aurangabad</span>
+                        <span>2017-2019 | 69.7%</span>
                     </div>
                 </div>
+                
                 <div class="education-item">
                     <div class="education-degree">Secondary School Certificate (SSC)</div>
-                    <div class="education-school">Swami Vivekanand Academy, chh.SambhajiNagar (Aurangabad)</div>
+                    <div class="education-school">Swami Vivekanand Academy</div>
                     <div class="education-details">
-                        <div class="education-year">2017</div>
-                        <div class="education-grade">78.60%</div>
+                        <span>Aurangabad</span>
+                        <span>2017 | 78.60%</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="section">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div style="text-align: center; font-size: 1.2rem; color: #666;">
-                <p>I'm always interested in hearing about new opportunities and projects.</p>
-                <p>Feel free to reach out if you'd like to work together!</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
     <footer>
-        <div class="container">
+        <div class="footer-content">
             <div class="social-links">
-                <a href="mailto:ketanmhaske641@gmail.com"><i class="fas fa-envelope"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="mailto:ketanmhaske641@gmail.com">📧</a>
+                <a href="tel:7887328671">📱</a>
+                <a href="#">💼</a>
+                <a href="#">🔗</a>
             </div>
-            <p>&copy; 2024 Ketan Mhaske. All rights reserved.</p>
+            <p>&copy; @Ketan Mhaske. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+        // Loading animation
+        window.addEventListener('load', function() {
+            const loading = document.getElementById('loading');
+            setTimeout(() => {
+                loading.style.opacity = '0';
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                }, 500);
+            }, 1000);
         });
 
-        // Header background change on scroll
+        // Navbar scroll effect
         window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-                header.style.color = '#333';
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
             } else {
-                header.style.background = 'rgba(255, 255, 255, 0.1)';
-                header.style.color = 'white';
+                navbar.classList.remove('scrolled');
             }
         });
 
-        // Animate elements on scroll
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade in animation on scroll
         const observerOptions = {
             threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            rootMargin: '0px 0px -100px 0px'
         };
 
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('visible');
                 }
             });
         }, observerOptions);
 
-        // Observe all sections
-        document.querySelectorAll('.section').forEach(section => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(section);
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
         });
+
+        // Dynamic typing effect for hero section
+        function typeWriter(element, text, speed = 50) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            
+            type();
+        }
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const rate = scrolled * -0.5;
+            
+            if (hero) {
+                hero.style.transform = `translateY(${rate}px)`;
+            }
+        });
+
+        // Skills animation
+        function animateSkills() {
+            const skillTags = document.querySelectorAll('.skill-tag');
+            
+            skillTags.forEach((tag, index) => {
+                setTimeout(() => {
+                    tag.style.opacity = '0';
+                    tag.style.transform = 'translateY(20px)';
+                    tag.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        tag.style.opacity = '1';
+                        tag.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 100);
+            });
+        }
+
+        // Project cards hover effect
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Experience cards animation
+        function animateExperience() {
+            const expCards = document.querySelectorAll('.experience-card');
+            
+            expCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateX(-50px)';
+                    card.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateX(0)';
+                    }, 200);
+                }, index * 200);
+            });
+        }
+
+        // Mobile menu toggle
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenu.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Add mobile menu styles
+        const mobileStyles = `
+            @media (max-width: 768px) {
+                .nav-links {
+                    position: fixed;
+                    top: 70px;
+                    left: -100%;
+                    width: 100%;
+                    height: calc(100vh - 70px);
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(10px);
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: center;
+                    padding-top: 2rem;
+                    transition: left 0.3s ease;
+                }
+                
+                .nav-links.active {
+                    left: 0;
+                }
+                
+                .nav-links a {
+                    color: #333;
+                    font-size: 1.2rem;
+                    margin: 1rem 0;
+                    padding: 1rem 2rem;
+                    width: 80%;
+                    text-align: center;
+                    border-radius: 10px;
+                }
+                
+                .mobile-menu.active span:nth-child(1) {
+                    transform: rotate(45deg) translate(5px, 5px);
+                }
+                
+                .mobile-menu.active span:nth-child(2) {
+                    opacity: 0;
+                }
+                
+                .mobile-menu.active span:nth-child(3) {
+                    transform: rotate(-45deg) translate(7px, -6px);
+                }
+            }
+        `;
+
+        // Add mobile styles to head
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = mobileStyles;
+        document.head.appendChild(styleSheet);
+
+        // Contact form functionality (if needed)
+        function sendEmail() {
+            const email = 'ketanmhaske641@gmail.com';
+            const subject = 'Portfolio Contact';
+            const body = 'Hello Ketan, I visited your portfolio and would like to get in touch.';
+            
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        // Add click handler for email contact
+        document.querySelectorAll('.contact-item').forEach(item => {
+            if (item.textContent.includes('ketanmhaske641@gmail.com')) {
+                item.addEventListener('click', sendEmail);
+                item.style.cursor = 'pointer';
+            }
+        });
+
+        // Animate elements when they come into view
+        const animateOnScroll = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('skills-grid')) {
+                        animateSkills();
+                    }
+                    if (entry.target.querySelector('.experience-card')) {
+                        animateExperience();
+                    }
+                }
+            });
+        });
+
+        document.querySelectorAll('.skills-grid, .experience-card').forEach(el => {
+            animateOnScroll.observe(el);
+        });
+
+        // Add floating particles effect
+        function createParticles() {
+            const hero = document.querySelector('.hero');
+            const particlesCount = 20;
+            
+            for (let i = 0; i < particlesCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.cssText = `
+                    position: absolute;
+                    width: 4px;
+                    height: 4px;
+                    background: rgba(255, 255, 255, 0.5);
+                    border-radius: 50%;
+                    animation: float ${3 + Math.random() * 4}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * 2}s;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                `;
+                hero.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        createParticles();
+
+        // Add scroll progress indicator
+        function updateScrollProgress() {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            
+            let progressBar = document.querySelector('.scroll-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'scroll-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(45deg, #ff6b6b, #feca57);
+                    z-index: 9999;
+                    transition: width 0.1s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrollPercent + '%';
+        }
+
+        window.addEventListener('scroll', updateScrollProgress);
+
+        // Add some interactive elements
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px) scale(1.05)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        console.log('🚀 Portfolio loaded successfully!');
+        console.log('👋 Hello! Thanks for checking out my portfolio.');
     </script>
 </body>
 </html>
